@@ -119,3 +119,52 @@ def parse_pnml(file_path):
     print(f"Successfully parsed PNML file.")
     print(f"Found {len(net.places)} places and {len(net.transitions)} transitions.")
     return net
+
+
+# --- Example Usage ---
+if __name__ == "__main__":
+    
+    # Create a dummy PNML file for testing
+    dummy_pnml_content = """<?xml version="1.0" encoding="UTF-8"?>
+    <pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+      <net id="net1" type="http://www.pnml.org/version-2009/grammar/ptnet">
+        <page id="page1">
+          <place id="p1">
+            <initialMarking><text>1</text></initialMarking>
+          </place>
+          <place id="p2">
+            <initialMarking><text>0</text></initialMarking>
+          </place>
+          <transition id="t1">
+          </transition>
+          <arc id="a1" source="p1" target="t1"/>
+          <arc id="a2" source="t1" target="p2"/>
+        </page>
+      </net>
+    </pnml>
+    """
+    
+    # Write the dummy content to a file
+    with open("test_net.pnml", "w") as f:
+        f.write(dummy_pnml_content)
+
+    # Now, parse the file we just created
+    petri_net = parse_pnml("test_net.pnml")
+
+    if petri_net:
+        # Check if the parser worked
+        print("\n--- Parse Results ---")
+        
+        # Print places
+        for place in petri_net.places.values():
+            print(place)
+            
+        # Print transitions and their connections
+        for trans in petri_net.transitions.values():
+            print(f"\nTransition: {trans.id}")
+            print(f"  Inputs: {[p.id for p in trans.inputs]}")
+            print(f"  Outputs: {[p.id for p in trans.outputs]}")
+
+        # Test the initial marking vector
+        print("\nInitial Marking Vector:")
+        print(petri_net.get_initial_marking_vector())
