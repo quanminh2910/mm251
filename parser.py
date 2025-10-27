@@ -1,6 +1,36 @@
 import xml.etree.ElementTree as ET
 
-# (Insert the Place, Transition, and PetriNet classes from above)
+class Place:
+    def __init__(self, place_id, initial_marking=0):
+        self.id = place_id
+        self.initial_marking = initial_marking
+        
+    def __repr__(self):
+        # This helps with debugging
+        return f"Place(id='{self.id}', marking={self.initial_marking})"
+
+class Transition:
+    def __init__(self, trans_id):
+        self.id = trans_id
+        self.inputs = []  # A list of Place objects
+        self.outputs = [] # A list of Place objects
+
+    def __repr__(self):
+        # This helps with debugging
+        return f"Transition(id='{self.id}')"
+
+class PetriNet:
+    def __init__(self):
+        # We use dictionaries for fast lookups by ID
+        self.places = {}      # Key: place_id, Value: Place object
+        self.transitions = {} # Key: trans_id, Value: Transition object
+        
+    def get_initial_marking_vector(self):
+        # This will be useful for Task 2
+        # Returns a simple list of 0s and 1s
+        # Note: We must guarantee the order is always the same!
+        sorted_places = sorted(self.places.values(), key=lambda p: p.id)
+        return [p.initial_marking for p in sorted_places]
 
 def parse_pnml(file_path):
     """
